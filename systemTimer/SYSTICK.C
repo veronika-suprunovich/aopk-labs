@@ -12,6 +12,9 @@
 #define PRINT_STATUS_WORDS '3'
 #define GENERATE_RANDOM_NUMBER '4'
 
+#define ODD_NUMBER  1
+#define EVEN_NUMBER 2
+
 int octaveNoteFrequency[] = {
   277, 277, 494, 440, 392,
   392, 440, 494, 277,
@@ -148,15 +151,18 @@ void printStatusWords(void) {
 }
 
 
-void randomSet(int maxValue);
+void randomSet(int maxValue, int parity);
 int randomGet(void);
 
 void generateRandom(void) {
-  int userInput;
+  int userInput, parity;
   printf("Enter the maximum value of the number\n");
   scanf("%d", &userInput);
 
-  randomSet(userInput);
+  printf("1. odd number\t2. even number\n");
+  scanf("%d", &parity);
+
+  randomSet(userInput, parity);
 
   printf("Press any key to get result..\n");
   getch();
@@ -164,8 +170,18 @@ void generateRandom(void) {
   printf("Number: %u\n", randomGet());
 }
 
-void randomSet(int maxValue) {
-  outp(0x43, 0xb6);
+void randomSet(int maxValue, int parity) {
+  switch(parity) {
+    case ODD_NUMBER:
+        outp(0x43, 0xb4);
+        break;
+    case EVEN_NUMBER:
+        outp(0x43, 0xb6);
+        break;
+    default:
+        outp(0x43, 0xb4);
+        break;
+  }
 
   outp(0x42, maxValue & 0x00ff);
   outp(0x42, (maxValue & 0xff00) >> 8);
@@ -177,7 +193,7 @@ void randomSet(int maxValue) {
 int randomGet(void) {
   int number;
 
-  outp(0x43, 0x86);
+  outp(0x43, 0x128);
 
   number = inp(0x42);
   number = (inp(0x42) << 8) + number;
