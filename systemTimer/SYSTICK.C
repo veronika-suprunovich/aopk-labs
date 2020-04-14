@@ -155,14 +155,11 @@ void randomSet(int maxValue, int parity);
 int randomGet(void);
 
 void generateRandom(void) {
-  int userInput, parity;
+  int userInput;
   printf("Enter the maximum value of the number\n");
   scanf("%d", &userInput);
 
-  printf("1. odd number\t2. even number\n");
-  scanf("%d", &parity);
-
-  randomSet(userInput, parity);
+  randomSet(userInput);
 
   printf("Press any key to get result..\n");
   getch();
@@ -170,18 +167,10 @@ void generateRandom(void) {
   printf("Number: %u\n", randomGet());
 }
 
-void randomSet(int maxValue, int parity) {
-  switch(parity) {
-    case ODD_NUMBER:
-        outp(0x43, 0xb4);
-        break;
-    case EVEN_NUMBER:
-        outp(0x43, 0xb6);
-        break;
-    default:
-        outp(0x43, 0xb4);
-        break;
-  }
+void randomSet(int maxValue) {
+
+  outp(0x43, 0xb4);
+  break;
 
   outp(0x42, maxValue & 0x00ff);
   outp(0x42, (maxValue & 0xff00) >> 8);
