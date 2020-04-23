@@ -198,7 +198,7 @@ void delay() {
   setvect(0x70, newRTCInterrupt);
   _enable();
 
-  printf("Programm has stopped for %dms\n", delayTime);
+  printf("Program has stopped for %dms\n", delayTime);
 
   outp(0xA1, inp(0xA1) & 0xFE);
 
